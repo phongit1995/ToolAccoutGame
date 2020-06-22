@@ -23,42 +23,42 @@ namespace BAI1.ViewModel
         {
             this.GameGates.Add(new GameGate {
                 Name = "1g88.vin",
-                LoginApi = "http://khanhdang.xyz/AppG88/login.php",
+                LoginApi = "http://id.1g88.vin/api/Account/authenticate",
                 GetStockApi = "http://profile.1g88.vin/api/payment/GetAccountStock?CurrencyID=1",
                 Schema = "http"
             });
             this.GameGates.Add(new GameGate
             {
                 Name = "1w88.vin",
-                LoginApi = "http://khanhdang.xyz/AppW88/login.php",
+                LoginApi = "http://id.1w88.vin/api/Account/authenticate",
                 GetStockApi = "http://profile.1g88.vin/api/payment/GetAccountStock?CurrencyID=1",
                 Schema = "http"
             });
             this.GameGates.Add(new GameGate
             {
                 Name = "1r88.vin",
-                LoginApi = "http://khanhdang.xyz/AppR88/login.php",
+                LoginApi = "http://id.1r88.vin/api/Account/authenticate",
                 GetStockApi = "http://profile.1g88.vin/api/payment/GetAccountStock?CurrencyID=1",
                 Schema = "http"
             });
             this.GameGates.Add(new GameGate
             {
                 Name = "1m88.vin",
-                LoginApi = "http://khanhdang.xyz/AppM365/login.php",
+                LoginApi = "http://id.1m88.vin/api/Account/authenticate",
                 GetStockApi = "http://profile.1g88.vin/api/payment/GetAccountStock?CurrencyID=1",
                 Schema = "http"
             });
             this.GameGates.Add(new GameGate
             {
                 Name = "m365.vin",
-                LoginApi = "http://khanhdang.xyz/AppM365/login.php",
+                LoginApi = "http://id.m365.vin/api/Account/authenticate",
                 GetStockApi = "http://profile.1g88.vin/api/payment/GetAccountStock?CurrencyID=1",
                 Schema = "http"
             });
             this.GameGates.Add(new GameGate
             {
                 Name = "w365.vin",
-                LoginApi = "http://khanhdang.xyz/AppW365/login.php",
+                LoginApi = "http://id.w365.vin/api/Account/authenticate",
                 GetStockApi = "http://profile.1g88.vin/api/payment/GetAccountStock?CurrencyID=1",
                 Schema = "http"
             });
@@ -118,6 +118,14 @@ namespace BAI1.ViewModel
                 return _LoginCommand ?? (_LoginCommand = new CommandHandler(()=> this.Check(), () => CanExecute));
             }
         }
+        private ICommand _CancelButton;
+        public ICommand CancelButton
+        {
+            get
+            {
+                return _CancelButton ?? (_CancelButton = new CommandHandler(() => this.Check(), () => CanExecute));
+            }
+        }
         private async void Check ()
         {
             if(accounts.Count <= 0)
@@ -126,7 +134,7 @@ namespace BAI1.ViewModel
                 return;
             }
             var ct = this.cts.Token;
-            int taskCount = 30;
+            int taskCount = 50;
             for (int i = 0; i < this.Accounts.Count; i += taskCount){
                 ct.ThrowIfCancellationRequested();
                 this.Status = string.Format("Đang chạy tài khoản {0}-{1}...", i, i + taskCount);
@@ -145,6 +153,11 @@ namespace BAI1.ViewModel
 				tasks = null;
             }
          }
+        public void CanCelAction()
+        {
+            this.Status = "Đã Đừng Lại";
+            this.cts.Cancel();
+        }
            private async Task LoginAccountAsync(Account account, CancellationToken ct)
             {
                 await account.GetInfo(this.GameGate);
@@ -193,6 +206,7 @@ namespace BAI1.ViewModel
                         arr = null;
                     }
                     this.Accounts.Clear();
+                    temp = temp.Distinct(new AccountComparer()).ToList<Account>();
                     int index = 1;
                     foreach (Account account2 in temp)
                     {

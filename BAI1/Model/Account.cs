@@ -290,15 +290,19 @@ namespace BAI1.Model
                
                 if ((int)data["c"] !=0)
                 {
-                    this.Status = data.ToString();
+                    this.Status = "Sai Mật Khẩu";
                 }
                 else
                 {
                     this.Status = "Thành Công";
+                    this.AccessToken = data["m"].ToString();
                     dynamic jsd = JObject.Parse(data["d"].ToString());
                     this.Nickname = jsd.nickname;
                     this.GoldBalance = (int)jsd.goldBalance;
                     this.CoinBalance = (int)jsd.coinBalance;
+                    this.VipPoint = (int)jsd.vipPoint;
+                    this.Mobile = jsd.mobile;
+                   
                 }
                 return 1;
             }

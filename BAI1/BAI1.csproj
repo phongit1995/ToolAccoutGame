@@ -83,6 +83,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\AccountComparer.cs" />
     <Compile Include="Common\BaseViewModel.cs" />
     <Compile Include="Common\CommandHandler.cs" />
     <Compile Include="Common\RelayCommand.cs" />

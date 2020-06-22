@@ -205,6 +205,25 @@
 								Kind="CheckAll" />
                             </Button>
                             <Button
+							Name="Cacel"
+							Foreground="#FFFFFFFF"
+							Background="#FF008080"
+							BorderBrush="#FF008080"
+							Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+							ToolTip="Dừng Lại"
+							Width="30"
+							Height="30"
+							FontSize="10"
+							HorizontalAlignment="Right"
+							VerticalAlignment="Center"
+							Margin="5"
+							Grid.Column="1"
+							Command="{Binding CancelButton}"
+							CommandParameter="{Binding ElementName=Cacel}">
+                                <materialDesign:PackIcon
+								Kind="Stop" />
+                            </Button>
+                            <Button
 							Name="Export"
 							Foreground="#FFFFFFFF"
 							Background="#FF6495ED"
