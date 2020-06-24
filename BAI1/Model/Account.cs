@@ -1,4 +1,5 @@
 ﻿using BAI1.Common;
+using BAI1.NetWork;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -276,7 +277,7 @@ namespace BAI1.Model
         public async Task<int> GetInfo(GameGate game)
         {   
             this.Status = "Đang Running";
-            HttpClient client = new HttpClient();
+            //HttpClient client = new HttpClient();
             JObject js = new JObject();
             js["Md5Password"] = Utils.MD5(this.Password);
             js["Username"] = this.Username;
@@ -284,7 +285,7 @@ namespace BAI1.Model
             var content = new StringContent(js.ToString(), Encoding.UTF8, "application/json");
             try
             {
-                HttpResponseMessage httpResponseMessage = await client.PostAsync(game.LoginApi, content);
+                HttpResponseMessage httpResponseMessage = await this.client.PostAsync(game.LoginApi, content);
                 var exec = await httpResponseMessage.Content.ReadAsStringAsync();
                 JObject data = JObject.Parse(exec);
                
@@ -302,7 +303,7 @@ namespace BAI1.Model
                     this.CoinBalance = (int)jsd.coinBalance;
                     this.VipPoint = (int)jsd.vipPoint;
                     this.Mobile = jsd.mobile;
-                   
+                    await GetStock(game);
                 }
                 return 1;
             }
@@ -312,6 +313,33 @@ namespace BAI1.Model
                 return 1;
             }
             
+        }
+        public async Task<int> GetStock(GameGate game)
+        {
+            
+            try
+            {
+                this.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + this.AccessToken);
+                HttpResponseMessage httpResponseMessage = await client.GetAsync(game.GetStockApi);
+                var exec = await httpResponseMessage.Content.ReadAsStringAsync();
+                JObject data = JObject.Parse(exec);
+                if ((int)data["c"] == 0)
+                {
+                    dynamic jsd = JObject.Parse(data["d"].ToString());
+                    this.StockBalance = (int)jsd.stockBalance;
+                }
+                
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+
+            }
+
+            return 1;
         }
         public int CompareTo(Account other)
         {
@@ -347,8 +375,9 @@ namespace BAI1.Model
 
 
         private long index;
+        private HttpClient client = new NetworkApi().client;
 
-  
+
         private bool isChecked = false;
 
         private string status;

@@ -91,6 +91,7 @@
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Model\Account.cs" />
     <Compile Include="Model\GameGate.cs" />
+    <Compile Include="NetWork\NetworkApi.cs" />
     <Compile Include="ViewModel\AccountViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
